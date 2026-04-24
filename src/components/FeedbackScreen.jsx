@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { CLIENTS } from '../lib/clients.js'
 import { buildFeedbackSystemPrompt } from '../lib/prompts.js'
-import { sendMessage } from '../lib/api.js'
+import { sendFeedbackMessage } from '../lib/api.js'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition.js'
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
@@ -59,7 +59,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
     const triggerMessages = [{ role: 'user', content: openingPrompt }]
     setIsLoading(true)
 
-    sendMessage(systemPrompt, triggerMessages)
+    sendFeedbackMessage(systemPrompt, triggerMessages, client.name, true)
       .then(responseText => {
         setMessages([{ role: 'assistant', content: responseText }])
         if (voiceEnabled) speak(responseText)
@@ -83,7 +83,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
     setIsLoading(true)
 
     try {
-      const responseText = await sendMessage(systemPrompt, updatedMessages)
+      const responseText = await sendFeedbackMessage(systemPrompt, updatedMessages, client.name, false)
       const assistantMessage = { role: 'assistant', content: responseText }
       setMessages(prev => [...prev, assistantMessage])
       if (voiceEnabled) speak(responseText)

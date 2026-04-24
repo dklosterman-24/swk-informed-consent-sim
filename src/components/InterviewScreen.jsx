@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { CLIENTS, INTERVIEW_GUIDE, AGENCY_SERVICES, INFORMED_CONSENT_TEXT } from '../lib/clients.js'
 import { buildClientSystemPrompt } from '../lib/prompts.js'
-import { sendMessage } from '../lib/api.js'
+import { sendChatMessage } from '../lib/api.js'
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition.js'
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
@@ -78,7 +78,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
     setIsLoading(true)
 
     try {
-      const responseText = await sendMessage(systemPrompt, updatedMessages)
+      const responseText = await sendChatMessage(systemPrompt, updatedMessages, client.name)
       const assistantMessage = { role: 'assistant', content: responseText }
       setMessages(prev => [...prev, assistantMessage])
       if (voiceEnabled) speak(responseText)

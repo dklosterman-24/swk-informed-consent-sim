@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { CLIENTS } from '../lib/clients.js'
-import { buildAssessmentPrompt } from '../lib/prompts.js'
-import { sendMessage, formatTranscriptForAssessment } from '../lib/api.js'
+import { generateAssessment } from '../lib/api.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
 
 // Renders the markdown-formatted assessment response
@@ -59,11 +58,7 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const transcript = formatTranscriptForAssessment(interviewMessages)
-    const prompt = buildAssessmentPrompt(client.name, transcript)
-
-    // Assessment uses a one-shot system prompt with the transcript embedded
-    sendMessage(prompt, [{ role: 'user', content: 'Please evaluate this interview.' }])
+    generateAssessment(null, interviewMessages, client.name)
       .then(text => setAssessmentText(text))
       .catch(err => setError(err.message))
       .finally(() => setIsLoading(false))
