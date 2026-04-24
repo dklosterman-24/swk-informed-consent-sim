@@ -1,49 +1,53 @@
 import { useState, useEffect } from 'react'
-import { CLIENTS } from '../lib/clients.js'
+import { CLIENTS, CLIENT_COLORS } from '../lib/clients.js'
 import { generateAssessment } from '../lib/api.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
 
-// Renders the markdown-formatted assessment response
+const LEVEL_STYLES = {
+  'Excellent':     'bg-green-100 text-green-800',
+  'Proficient':    'bg-sage-100 text-sage-800',
+  'Developing':    'bg-amber-100 text-amber-800',
+  'Not Observed':  'bg-gray-100 text-gray-500',
+  'Insufficient':  'bg-red-100 text-red-700',
+}
+
 function AssessmentContent({ text }) {
   const lines = text.split('\n')
   const elements = []
   let key = 0
+  let inList = false
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-
+  for (const line of lines) {
     if (line.startsWith('## ')) {
-      elements.push(<h2 key={key++} className="text-xl font-bold text-navy-700 mt-6 mb-3">{line.slice(3)}</h2>)
+      inList = false
+      elements.push(<h2 key={key++} className="text-xl font-bold text-gray-800 mt-6 mb-3 first:mt-0">{line.slice(3)}</h2>)
     } else if (line.startsWith('### ')) {
-      elements.push(<h3 key={key++} className="text-base font-semibold text-gray-800 mt-5 mb-2 border-b border-gray-100 pb-1">{line.slice(4)}</h3>)
+      inList = false
+      elements.push(<h3 key={key++} className="text-sm font-bold text-gray-500 uppercase tracking-wide mt-5 mb-2">{line.slice(4)}</h3>)
     } else if (line.startsWith('**') && line.includes('** —')) {
-      // Criterion lines: **N. Title** — Level
-      const [titlePart, rest] = line.split('** —')
-      const title = titlePart.replace('**', '')
-      const level = rest?.trim() || ''
-      const levelColors = {
-        'Excellent': 'bg-green-100 text-green-800',
-        'Proficient': 'bg-blue-100 text-blue-800',
-        'Developing': 'bg-amber-100 text-amber-800',
-        'Not Observed': 'bg-gray-100 text-gray-600',
-      }
-      const colorClass = Object.entries(levelColors).find(([k]) => level.includes(k))?.[1] || 'bg-gray-100 text-gray-600'
+      inList = false
+      const boldEnd = line.indexOf('** —')
+      const title = line.slice(2, boldEnd)
+      const rest  = line.slice(boldEnd + 4).trim()
+      const levelEntry = Object.keys(LEVEL_STYLES).find(k => rest.includes(k))
+      const levelClass = levelEntry ? LEVEL_STYLES[levelEntry] : 'bg-gray-100 text-gray-500'
       elements.push(
-        <div key={key++} className="flex items-start gap-3 mt-4">
-          <p className="font-semibold text-gray-800 flex-1">{title}</p>
-          {level && <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${colorClass}`}>{level}</span>}
+        <div key={key++} className="flex items-center gap-3 mt-4 mb-1">
+          <p className="font-semibold text-gray-800 flex-1 text-sm">{title}</p>
+          {rest && <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full flex-shrink-0 ${levelClass}`}>{rest}</span>}
         </div>
       )
     } else if (line.startsWith('- ')) {
+      if (!inList) { inList = true }
       elements.push(
-        <li key={key++} className="ml-4 text-gray-700 text-sm leading-relaxed list-disc">
-          {line.slice(2)}
-        </li>
+        <li key={key++} className="ml-4 text-gray-600 text-sm leading-relaxed list-disc">{line.slice(2)}</li>
       )
     } else if (line.startsWith('---')) {
-      elements.push(<hr key={key++} className="my-4 border-gray-200" />)
+      inList = false
+      elements.push(<hr key={key++} className="my-5 border-warm-200" />)
     } else if (line.trim()) {
-      elements.push(<p key={key++} className="text-gray-700 text-sm leading-relaxed mt-1">{line}</p>)
+      inList = false
+      elements.push(<p key={key++} className="text-gray-600 text-sm leading-relaxed mt-1.5">{line}</p>)
     }
   }
 
@@ -52,6 +56,7 @@ function AssessmentContent({ text }) {
 
 export default function AssessmentScreen({ clientId, interviewMessages, feedbackMessages, onRestart }) {
   const client = CLIENTS[clientId]
+  const colors = CLIENT_COLORS[client.color]
 
   const [assessmentText, setAssessmentText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -65,100 +70,96 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-indigo-800 text-white px-4 py-3 flex-shrink-0">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-indigo-200 text-xs font-medium uppercase tracking-wide">Performance Assessment</p>
-          <h1 className="text-lg font-semibold">Session with {client.name}</h1>
+    <div className="min-h-screen bg-warm-50 flex flex-col">
+      <header className="bg-white border-b border-warm-200 px-4 py-3 flex-shrink-0 shadow-softer">
+        <div className="max-w-3xl mx-auto flex items-center gap-3">
+          <div className={`w-9 h-9 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center font-bold flex-shrink-0`}>
+            {client.name[0]}
+          </div>
+          <div>
+            <p className="font-semibold text-gray-800">Session Assessment — {client.name}</p>
+            <p className="text-xs text-gray-400">Based on your interview transcript</p>
+          </div>
         </div>
       </header>
 
-      <div className="bg-white border-b border-gray-200 px-4 py-2 flex-shrink-0">
+      <div className="bg-white border-b border-warm-200 px-4 py-2.5 flex-shrink-0">
         <div className="max-w-3xl mx-auto">
           <PhaseIndicator currentPhase="assessment" />
         </div>
       </div>
 
       <main className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto space-y-4">
 
           {isLoading && (
-            <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
-              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4">
-                <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+            <div className="bg-white rounded-3xl shadow-soft p-10 text-center">
+              <div className={`w-14 h-14 rounded-full ${colors.bg} flex items-center justify-center mx-auto mb-4`}>
+                <div className={`w-6 h-6 border-2 border-current ${colors.text} border-t-transparent rounded-full animate-spin`} />
               </div>
-              <p className="text-gray-600 font-medium">Reviewing your session...</p>
-              <p className="text-gray-400 text-sm mt-1">Analyzing the full transcript against rubric criteria</p>
+              <p className="text-gray-700 font-medium">Reviewing your session...</p>
+              <p className="text-gray-400 text-sm mt-1">Analyzing transcript against rubric criteria</p>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-5 py-4 text-red-700">
-              <p className="font-medium">Assessment could not be generated.</p>
-              <p className="text-sm mt-1">{error}</p>
+            <div className="bg-red-50 border border-red-200 rounded-2xl px-5 py-4 text-red-700">
+              <p className="font-medium text-sm">Assessment could not be generated.</p>
+              <p className="text-sm mt-1 text-red-600">{error}</p>
             </div>
           )}
 
           {!isLoading && !error && assessmentText && (
             <>
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
+              {/* Session stats */}
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { value: interviewMessages.filter(m => m.role === 'user').length,      label: 'Your responses' },
+                  { value: interviewMessages.filter(m => m.role === 'assistant').length, label: `${client.name}'s responses` },
+                  { value: feedbackMessages.filter(m => m.role === 'assistant').length,  label: 'Feedback exchanges' },
+                ].map(({ value, label }) => (
+                  <div key={label} className="bg-white rounded-2xl shadow-softer border border-warm-100 p-4 text-center">
+                    <p className={`text-2xl font-bold ${colors.text}`}>{value}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Main assessment */}
+              <div className="bg-white rounded-3xl shadow-soft p-6">
                 <AssessmentContent text={assessmentText} />
               </div>
 
-              {/* Session stats */}
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                  <p className="text-2xl font-bold text-navy-700">
-                    {interviewMessages.filter(m => m.role === 'user').length}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-0.5">Your responses</p>
-                </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                  <p className="text-2xl font-bold text-navy-700">
-                    {interviewMessages.filter(m => m.role === 'assistant').length}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-0.5">{client.name}'s responses</p>
-                </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                  <p className="text-2xl font-bold text-navy-700">
-                    {feedbackMessages.filter(m => m.role === 'assistant').length}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-0.5">Feedback exchanges</p>
-                </div>
-              </div>
-
-              {/* Kolb reflection prompt */}
-              <div className="mt-4 bg-indigo-50 border border-indigo-100 rounded-xl p-5">
-                <p className="text-sm font-semibold text-indigo-800 mb-2">Before your next attempt, reflect:</p>
-                <ul className="space-y-1.5">
-                  <li className="text-sm text-indigo-700 flex items-start gap-2">
-                    <span className="mt-0.5 flex-shrink-0">1.</span>
-                    What one thing would you do differently in the first 2 minutes?
-                  </li>
-                  <li className="text-sm text-indigo-700 flex items-start gap-2">
-                    <span className="mt-0.5 flex-shrink-0">2.</span>
-                    Where did you feel most confident, and where did you feel stuck?
-                  </li>
-                  <li className="text-sm text-indigo-700 flex items-start gap-2">
-                    <span className="mt-0.5 flex-shrink-0">3.</span>
-                    How did {client.name}'s responses change based on your approach?
-                  </li>
-                </ul>
+              {/* Reflection prompts */}
+              <div className={`${colors.bg} rounded-2xl p-5 border ${colors.border}`}>
+                <p className={`text-sm font-semibold ${colors.text} mb-3`}>Before your next attempt, reflect:</p>
+                <ol className="space-y-2">
+                  {[
+                    `What one thing would you do differently in the first two minutes?`,
+                    `Where did you feel most confident, and where did you feel stuck?`,
+                    `How did ${client.name}'s responses change based on how you engaged?`,
+                  ].map((q, i) => (
+                    <li key={i} className={`text-sm ${colors.text} flex items-start gap-2 opacity-90`}>
+                      <span className="font-bold flex-shrink-0 mt-0.5">{i + 1}.</span>
+                      <span>{q}</span>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </>
           )}
 
           {/* Actions */}
-          <div className="mt-6 flex gap-3">
+          <div className="flex gap-3 pt-2">
             <button
               onClick={onRestart}
-              className="flex-1 py-3 bg-navy-700 text-white font-medium rounded-lg hover:bg-navy-800 transition-colors"
+              className="flex-1 py-3.5 bg-sage-600 text-white font-medium rounded-2xl hover:bg-sage-700 transition-all shadow-soft hover:shadow-medium"
             >
               Try Again
             </button>
             <button
               onClick={() => window.print()}
-              className="px-5 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-5 py-3.5 border border-warm-200 text-gray-600 font-medium rounded-2xl hover:bg-warm-100 transition-colors"
             >
               Print / Save
             </button>

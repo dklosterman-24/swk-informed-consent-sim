@@ -7,16 +7,42 @@ export const CLIENTS = {
   michelle: {
     id: 'michelle',
     name: 'Michelle',
+    age: 22,
     pronouns: 'she/her',
-    label: 'Michelle (she/her)',
+    label: 'Michelle, 22',
+    color: 'teal',
+    tier: 'standard',
     summary: `Michelle is a 22-year-old college student who recently lost her off-campus apartment. She is sleeping in her car and showering at the campus fitness center. A friend convinced her to contact a social worker at the local Salvation Army to inquire about housing resources and help with budgeting. Michelle cannot afford to live on campus and has an outstanding balance on her university account. She is unsure if she qualifies for any community programs and knows very little about how to find resources. She works part-time at a fast-food restaurant and is a part-time student. She is worried she will have to drop out if she cannot resolve her outstanding university bill. She does not want to miss work because it is her only source of income. She has family in another state but rarely visits. Michelle recently stopped attending a local faith community. This is your first meeting with Michelle. You have been in this position for 3 months.`,
   },
-  michael: {
-    id: 'michael',
-    name: 'Michael',
+  david: {
+    id: 'david',
+    name: 'David',
+    age: 22,
     pronouns: 'he/him',
-    label: 'Michael (he/him)',
-    summary: `Michael is a 22-year-old college student who recently lost his off-campus apartment. He is sleeping in his car and showering at the campus fitness center. A friend convinced him to contact a social worker at the local Salvation Army to inquire about housing resources and help with budgeting. Michael cannot afford to live on campus and has an outstanding balance on his university account. He is unsure if he qualifies for any community programs and knows very little about how to find resources. He works part-time at a fast-food restaurant and is a part-time student. He is worried he will have to drop out if he cannot resolve his outstanding university bill. He does not want to miss work because it is his only source of income. He has family in another state but rarely visits. Michael recently stopped attending a local faith community. This is your first meeting with Michael. You have been in this position for 3 months.`,
+    label: 'David, 22',
+    color: 'amber',
+    tier: 'standard',
+    summary: `David is a 22-year-old college student who recently lost his off-campus apartment. He is sleeping in his car and showering at the campus fitness center. A friend convinced him to contact a social worker at the local Salvation Army to inquire about housing resources and help with budgeting. David cannot afford to live on campus and has an outstanding balance on his university account. He is unsure if he qualifies for any community programs and knows very little about how to find resources. He works part-time at a fast-food restaurant and is a part-time student. He is worried he will have to drop out if he cannot resolve his outstanding university bill. He does not want to miss work because it is his only source of income. He has family in another state but rarely visits. David recently stopped attending a local faith community. This is your first meeting with David. You have been in this position for 3 months.`,
+  },
+  carlos: {
+    id: 'carlos',
+    name: 'Carlos',
+    age: 54,
+    pronouns: 'he/him',
+    label: 'Carlos, 54',
+    color: 'orange',
+    tier: 'advanced',
+    summary: `Carlos is a 54-year-old man who was released from a state correctional facility eight weeks ago after serving a two-year sentence for a non-violent offense. He is currently staying with a cousin but that arrangement ends in two weeks. He has been unable to secure housing because landlords have denied him due to his record. He had a steady job as a landscaper for fifteen years before his incarceration and wants to return to that work, but finding clients and transportation is difficult without a stable address. He has a 19-year-old son he is trying to reconnect with; their relationship is strained. Carlos has been sober for three years, including his time incarcerated, and attends AA meetings regularly. He is proud of his sobriety and does not want it to define how people see him. He is not sure what services the Salvation Army offers and came in on the recommendation of his parole officer. This is your first meeting with Carlos. You have been in this position for 3 months.`,
+  },
+  aisha: {
+    id: 'aisha',
+    name: 'Aisha',
+    age: 31,
+    pronouns: 'she/her',
+    label: 'Aisha, 31',
+    color: 'purple',
+    tier: 'advanced',
+    summary: `Aisha is a 31-year-old mother of two children, ages 4 and 9. She left a domestic violence situation six weeks ago and is currently staying at a women's emergency shelter with her children. The shelter has a 60-day residency limit, and she has approximately two weeks remaining. Her former partner has been contacting her family members trying to find her location; she has a protective order in place but is still fearful. Aisha has not worked in four years — her partner pressured her to leave her job — and her work history before that was in retail and food service. She has no savings and her name is not on any utility accounts or leases, which makes establishing credit history for housing difficult. She is guarded about sharing details of her situation, particularly anything that might reveal her location or the specifics of the abuse. She came to the Salvation Army because a shelter advocate referred her. This is your first meeting with Aisha. You have been in this position for 3 months.`,
   },
 }
 
@@ -48,3 +74,10 @@ I understand that what I discuss with the social worker or anyone else in the ag
   • If I am required by a court of law to disclose information through a court order.
 
 I understand that I have the right to ask for a review of my case if I determine I am not receiving the services I need or if I believe I am not being treated fairly.`
+
+export const CLIENT_COLORS = {
+  teal:   { bg: 'bg-teal-100',   text: 'text-teal-700',   border: 'border-teal-200',   ring: 'ring-teal-300' },
+  amber:  { bg: 'bg-amber-100',  text: 'text-amber-700',  border: 'border-amber-200',  ring: 'ring-amber-300' },
+  orange: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200', ring: 'ring-orange-300' },
+  purple: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200', ring: 'ring-purple-300' },
+}
