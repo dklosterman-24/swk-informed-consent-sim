@@ -67,7 +67,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
     setIsLoading(true)
 
     try {
-      const responseText = await sendChatMessage(systemPrompt, updatedMessages, client.name)
+      const responseText = await sendChatMessage(systemPrompt, updatedMessages, clientId)
       const assistantMessage = { role: 'assistant', content: responseText }
       setMessages(prev => [...prev, assistantMessage])
       if (voiceEnabled) speak(responseText)

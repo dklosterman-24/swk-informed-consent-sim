@@ -46,7 +46,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
     if (autoStarted) return
     setAutoStarted(true)
     setIsLoading(true)
-    sendFeedbackMessage(systemPrompt, [{ role: 'user', content: 'The interview just ended. Please share your honest feedback.' }], client.name, true)
+    sendFeedbackMessage(systemPrompt, [{ role: 'user', content: 'The interview just ended. Please share your honest feedback.' }], clientId, true)
       .then(text => {
         setMessages([{ role: 'assistant', content: text }])
         if (voiceEnabled) speak(text)
@@ -68,7 +68,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
     setInput('')
     setIsLoading(true)
     try {
-      const responseText = await sendFeedbackMessage(systemPrompt, updatedMessages, client.name, false)
+      const responseText = await sendFeedbackMessage(systemPrompt, updatedMessages, clientId, false)
       const assistantMessage = { role: 'assistant', content: responseText }
       setMessages(prev => [...prev, assistantMessage])
       if (voiceEnabled) speak(responseText)
