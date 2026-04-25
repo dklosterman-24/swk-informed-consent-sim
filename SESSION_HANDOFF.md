@@ -77,6 +77,20 @@ If port 3001 is already in use: `lsof -ti :3001 | xargs kill -9`
 
 ---
 
+## Version 2 Upgrade Path (If POC Advances)
+
+**Voice prosody assessment via Hume AI**
+Current rubric evaluates word choice only — Claude sees transcribed text, not vocal delivery. A student can say the right words in a cold or dismissive tone and it won't be flagged.
+
+If this moves past POC, the upgrade path is:
+- Capture raw audio instead of just the Web Speech API transcript
+- Send to Hume AI (purpose-built voice emotion/prosody analysis API)
+- Feed tone, pacing, and emotional expression scores into the assessment rubric alongside the transcript
+
+This would meaningfully close the gap between simulated and real assessment. Requires additional API integration and per-session cost. Agreed as deferred feature pending faculty buy-in.
+
+---
+
 ## Next Steps (When Ready)
 
 - [ ] Swap in OUES API keys (Anthropic + ElevenLabs)
