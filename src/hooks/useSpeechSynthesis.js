@@ -20,7 +20,9 @@ export function useSpeechSynthesis() {
   }, [])
 
   const speak = useCallback(async (text, voiceId) => {
+    const cleanText = text.replace(/\*[^*]+\*/g, '').replace(/\[[^\]]+\]/g, '').replace(/\s{2,}/g, ' ').trim()
     cancel()
+    text = cleanText
 
     if (USE_ELEVENLABS && voiceId) {
       setIsSpeaking(true)
