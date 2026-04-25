@@ -70,7 +70,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
       const responseText = await sendChatMessage(systemPrompt, updatedMessages, clientId)
       const assistantMessage = { role: 'assistant', content: responseText }
       setMessages(prev => [...prev, assistantMessage])
-      if (voiceEnabled) speak(responseText)
+      if (voiceEnabled) speak(responseText, client.voiceId)
     } catch (err) {
       setError(err.message)
     } finally {

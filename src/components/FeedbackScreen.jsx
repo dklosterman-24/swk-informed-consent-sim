@@ -49,7 +49,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
     sendFeedbackMessage(systemPrompt, [{ role: 'user', content: 'The interview just ended. Please share your honest feedback.' }], clientId, true)
       .then(text => {
         setMessages([{ role: 'assistant', content: text }])
-        if (voiceEnabled) speak(text)
+        if (voiceEnabled) speak(text, client.voiceId)
       })
       .catch(err => setError(err.message))
       .finally(() => setIsLoading(false))
@@ -71,7 +71,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
       const responseText = await sendFeedbackMessage(systemPrompt, updatedMessages, clientId, false)
       const assistantMessage = { role: 'assistant', content: responseText }
       setMessages(prev => [...prev, assistantMessage])
-      if (voiceEnabled) speak(responseText)
+      if (voiceEnabled) speak(responseText, client.voiceId)
     } catch (err) {
       setError(err.message)
     } finally {

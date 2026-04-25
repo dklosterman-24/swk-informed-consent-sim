@@ -1,15 +1,16 @@
 import { getScriptedResponse, getScriptedFeedback, getScriptedAssessment } from './scriptedResponses.js'
 
-// Set to true to use live Claude API (requires backend + API key)
-// Set to false for fully offline scripted mode (POC default)
-export const USE_LIVE_LLM = false
+export const USE_LIVE_LLM    = true  // flip to false to use scripted offline mode
+export const USE_ELEVENLABS  = true  // flip to false to use browser TTS
 
-export async function sendChatMessage(systemPrompt, conversationHistory, clientName) {
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+
+export async function sendChatMessage(systemPrompt, conversationHistory, clientId) {
   if (!USE_LIVE_LLM) {
     const lastUserMessage = [...conversationHistory].reverse().find(m => m.role === 'user')
     const text = lastUserMessage?.content || ''
-    await delay(600 + Math.random() * 600) // realistic response pause
-    return getScriptedResponse(text, clientName, conversationHistory.length)
+    await delay(600 + Math.random() * 600)
+    return getScriptedResponse(text, clientId)
   }
 
   const response = await fetch('/api/chat', {
@@ -26,10 +27,10 @@ export async function sendChatMessage(systemPrompt, conversationHistory, clientN
   return (await response.json()).content
 }
 
-export async function sendFeedbackMessage(systemPrompt, conversationHistory, clientName, isOpening) {
+export async function sendFeedbackMessage(systemPrompt, conversationHistory, clientId, isOpening) {
   if (!USE_LIVE_LLM) {
     await delay(700 + Math.random() * 500)
-    return getScriptedFeedback(clientName, isOpening)
+    return getScriptedFeedback(clientId, isOpening)
   }
 
   const response = await fetch('/api/chat', {
@@ -48,12 +49,13 @@ export async function sendFeedbackMessage(systemPrompt, conversationHistory, cli
 
 export async function generateAssessment(systemPrompt, interviewMessages, clientName) {
   if (!USE_LIVE_LLM) {
-    await delay(1500 + Math.random() * 1000) // simulate analysis time
+    await delay(1500 + Math.random() * 1000)
     return getScriptedAssessment(clientName, interviewMessages)
   }
 
   const transcript = formatTranscriptForAssessment(interviewMessages)
-  const prompt = buildAssessmentSystemPrompt(clientName, transcript)
+  const { buildAssessmentPrompt } = await import('./prompts.js')
+  const prompt = buildAssessmentPrompt(clientName, transcript)
 
   const response = await fetch('/api/chat', {
     method: 'POST',
@@ -71,6 +73,25 @@ export async function generateAssessment(systemPrompt, interviewMessages, client
 
   return (await response.json()).content
 }
+
+// ─── ElevenLabs TTS ───────────────────────────────────────────────────────────
+
+export async function speakWithElevenLabs(text, voiceId) {
+  const response = await fetch('/api/speak', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, voiceId }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`ElevenLabs request failed: ${response.status}`)
+  }
+
+  const blob = await response.blob()
+  return URL.createObjectURL(blob)
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 export function formatTranscriptForAssessment(messages) {
   return messages
