@@ -24,6 +24,8 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
   const [panelOpen, setPanelOpen] = useState(false)
   const [panelTab, setPanelTab] = useState('guide')
   const [error, setError] = useState(null)
+  const [isVoiceInput, setIsVoiceInput] = useState(false)
+  const [showVoiceTip, setShowVoiceTip] = useState(() => !localStorage.getItem('swk-voice-tip-seen'))
 
   const messagesEndRef = useRef(null)
   const timerRef = useRef(null)
@@ -32,6 +34,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
 
   const handleSpeechResult = useCallback((transcript) => {
     setInput(prev => prev ? `${prev} ${transcript}` : transcript)
+    setIsVoiceInput(true)
   }, [])
 
   const { isListening, isSupported: isSpeechSupported, startListening, stopListening } = useSpeechRecognition({ onResult: handleSpeechResult })
@@ -65,6 +68,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
     const updatedMessages = [...messages, userMessage]
     setMessages(updatedMessages)
     setInput('')
+    setIsVoiceInput(false)
     setIsLoading(true)
 
     try {
@@ -140,6 +144,25 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
         </div>
       </div>
 
+      {isSpeechSupported && showVoiceTip && (
+        <div className="bg-blue-50 border-b border-blue-100 px-4 py-3 flex-shrink-0">
+          <div className="max-w-5xl mx-auto flex items-start justify-between gap-4">
+            <div className="flex items-start gap-2.5">
+              <span className="text-blue-400 text-lg flex-shrink-0 mt-0.5">🎤</span>
+              <div>
+                <p className="text-sm font-medium text-blue-800">Voice input is available</p>
+                <p className="text-xs text-blue-600 mt-0.5">Hold the mic button while you speak — your browser may ask for microphone permission the first time. Your words will appear as text so you can review and edit before sending.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => { setShowVoiceTip(false); localStorage.setItem('swk-voice-tip-seen', '1') }}
+              className="flex-shrink-0 text-blue-300 hover:text-blue-500 text-lg leading-none mt-0.5"
+              aria-label="Dismiss"
+            >×</button>
+          </div>
+        </div>
+      )}
+
       {timesUp && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-3 flex-shrink-0">
           <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
@@ -192,7 +215,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
             <form onSubmit={handleSubmit} className="flex gap-2 items-end">
               <textarea
                 value={input}
-                onChange={e => setInput(e.target.value)}
+                onChange={e => { setInput(e.target.value); setIsVoiceInput(false) }}
                 onKeyDown={handleKeyDown}
                 placeholder={`Speak to ${client.name}...`}
                 rows={2}
@@ -200,21 +223,26 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
                 disabled={isLoading}
               />
               {isSpeechSupported && (
-                <button
-                  type="button"
-                  onMouseDown={startListening}
-                  onMouseUp={stopListening}
-                  onTouchStart={startListening}
-                  onTouchEnd={stopListening}
-                  title="Hold to speak"
-                  className={`flex-shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center transition-all text-base ${
-                    isListening
-                      ? 'bg-red-500 text-white scale-110 ring-4 ring-red-100'
-                      : 'bg-warm-100 text-gray-500 hover:bg-warm-200'
-                  }`}
-                >
-                  {isListening ? '⏹' : '🎤'}
-                </button>
+                <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onMouseDown={startListening}
+                    onMouseUp={stopListening}
+                    onTouchStart={startListening}
+                    onTouchEnd={stopListening}
+                    title="Hold to speak"
+                    className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all text-base ${
+                      isListening
+                        ? 'bg-red-500 text-white scale-110 ring-4 ring-red-100'
+                        : 'bg-warm-100 text-gray-500 hover:bg-warm-200'
+                    }`}
+                  >
+                    {isListening ? '⏹' : '🎤'}
+                  </button>
+                  {!isListening && (
+                    <span className="text-[10px] text-gray-400 whitespace-nowrap">Hold to speak</span>
+                  )}
+                </div>
               )}
               <button
                 type="submit"
@@ -231,6 +259,12 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
               <p className="text-xs text-red-500 mt-1.5 ml-1 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse inline-block" />
                 Listening... release to stop
+              </p>
+            )}
+            {!isListening && isVoiceInput && input.trim() && (
+              <p className="text-xs text-sage-600 mt-1.5 ml-1 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-sage-400 inline-block" />
+                Review your response above — edit if needed, then send when you're ready.
               </p>
             )}
           </div>

@@ -238,6 +238,11 @@ function GuideStep({ client, onBack, onStart }) {
         </p>
       </div>
 
+      <div className="bg-sage-50 border border-sage-100 rounded-2xl px-5 py-4">
+        <p className="text-sm font-semibold text-sage-800 mb-1">This is a safe space to practice</p>
+        <p className="text-sm text-sage-700 leading-relaxed">There's no penalty for mistakes here — that's the point. Try different approaches, pay attention to how {client.name} responds to your tone and phrasing, and use the reflection time after the interview to notice what landed and what didn't. You can always start over.</p>
+      </div>
+
       <ol className="space-y-2.5">
         {INTERVIEW_GUIDE.map(item => (
           <li key={item.id} className="flex gap-4 bg-white rounded-2xl shadow-softer border border-warm-100 p-4">
