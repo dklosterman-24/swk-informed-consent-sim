@@ -13,7 +13,7 @@ export const CLIENTS = {
     color: 'teal',
     tier: 'standard',
     voiceId: '21m00Tcm4TlvDq8ikWAM', // ElevenLabs: Rachel
-    avatar: 'https://api.dicebear.com/9.x/personas/svg?seed=michelle-consent-sim&backgroundColor=ccfbf1',
+    avatar: '/Michelle.png',
     summary: `Michelle is a 22-year-old college student who recently lost her off-campus apartment. She is sleeping in her car and showering at the campus fitness center. A friend convinced her to contact a social worker at the local Salvation Army to inquire about housing resources and help with budgeting. Michelle cannot afford to live on campus and has an outstanding balance on her university account. She is unsure if she qualifies for any community programs and knows very little about how to find resources. She works part-time at a fast-food restaurant and is a part-time student. She is worried she will have to drop out if she cannot resolve her outstanding university bill. She does not want to miss work because it is her only source of income. She has family in another state but rarely visits. Michelle recently stopped attending a local faith community. This is your first meeting with Michelle. You have been in this position for 3 months.`,
   },
   david: {
@@ -25,7 +25,7 @@ export const CLIENTS = {
     color: 'amber',
     tier: 'standard',
     voiceId: 'yoZ06aMxZJJ28mfd3POQ', // ElevenLabs: Sam — young, raspy, natural
-    avatar: 'https://api.dicebear.com/9.x/personas/svg?seed=david-consent-sim&backgroundColor=fef3c7',
+    avatar: '/David.png',
     summary: `David is a 22-year-old college student who recently lost his off-campus apartment. He is sleeping in his car and showering at the campus fitness center. A friend convinced him to contact a social worker at the local Salvation Army to inquire about housing resources and help with budgeting. David cannot afford to live on campus and has an outstanding balance on his university account. He is unsure if he qualifies for any community programs and knows very little about how to find resources. He works part-time at a fast-food restaurant and is a part-time student. He is worried he will have to drop out if he cannot resolve his outstanding university bill. He does not want to miss work because it is his only source of income. He has family in another state but rarely visits. David recently stopped attending a local faith community. This is your first meeting with David. You have been in this position for 3 months.`,
   },
   carlos: {
@@ -37,7 +37,7 @@ export const CLIENTS = {
     color: 'orange',
     tier: 'advanced',
     voiceId: 'pNInz6obpgDQGcFmaJgB', // ElevenLabs: Adam
-    avatar: 'https://api.dicebear.com/9.x/personas/svg?seed=carlos-consent-sim&backgroundColor=ffedd5',
+    avatar: '/Carlos.png',
     summary: `Carlos is a 54-year-old man who was released from a state correctional facility eight weeks ago after serving a two-year sentence for a non-violent offense. He is currently staying with a cousin but that arrangement ends in two weeks. He has been unable to secure housing because landlords have denied him due to his record. He had a steady job as a landscaper for fifteen years before his incarceration and wants to return to that work, but finding clients and transportation is difficult without a stable address. He has a 19-year-old son he is trying to reconnect with; their relationship is strained. Carlos has been sober for three years, including his time incarcerated, and attends AA meetings regularly. He is proud of his sobriety and does not want it to define how people see him. He is not sure what services the Salvation Army offers and came in on the recommendation of his parole officer. This is your first meeting with Carlos. You have been in this position for 3 months.`,
   },
   aisha: {
@@ -49,7 +49,7 @@ export const CLIENTS = {
     color: 'purple',
     tier: 'advanced',
     voiceId: 'AZnzlk1XvdvUeBnXmlld', // ElevenLabs: Domi
-    avatar: 'https://api.dicebear.com/9.x/personas/svg?seed=aisha-consent-sim&backgroundColor=f3e8ff',
+    avatar: '/Aisha.jpeg',
     summary: `Aisha is a 31-year-old mother of two children, ages 4 and 9. She left a domestic violence situation six weeks ago and is currently staying at a women's emergency shelter with her children. The shelter has a 60-day residency limit, and she has approximately two weeks remaining. Her former partner has been contacting her family members trying to find her location; she has a protective order in place but is still fearful. Aisha has not worked in four years — her partner pressured her to leave her job — and her work history before that was in retail and food service. She has no savings and her name is not on any utility accounts or leases, which makes establishing credit history for housing difficult. She is guarded about sharing details of her situation, particularly anything that might reveal her location or the specifics of the abuse. She came to the Salvation Army because a shelter advocate referred her. This is your first meeting with Aisha. You have been in this position for 3 months.`,
   },
 }
