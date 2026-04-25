@@ -72,8 +72,8 @@ If port 3001 is already in use: `lsof -ti :3001 | xargs kill -9`
 ## Usage Reporting
 
 - **Per session:** Assessment screen shows token and ElevenLabs character counts
-- **Anthropic billing:** console.anthropic.com → Usage
-- **ElevenLabs billing:** elevenlabs.io → Account → Usage
+- **Anthropic billing:** https://console.anthropic.com/settings/usage
+- **ElevenLabs billing:** https://elevenlabs.io/app/subscription
 
 ---
 

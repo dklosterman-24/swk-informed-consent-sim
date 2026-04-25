@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { CLIENTS, CLIENT_COLORS, INTERVIEW_GUIDE, INFORMED_CONSENT_TEXT, AGENCY_SERVICES } from '../lib/clients.js'
+import ClientAvatar from './ClientAvatar.jsx'
 
 export function PhaseIndicator({ currentPhase }) {
   const phases = [
@@ -53,9 +54,7 @@ function ClientCard({ client, selected, onSelect }) {
       }`}
     >
       <div className="flex items-center gap-3">
-        <div className={`w-11 h-11 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center text-lg font-bold flex-shrink-0`}>
-          {client.name[0]}
-        </div>
+        <ClientAvatar client={client} size="xl" />
         <div>
           <p className="font-semibold text-gray-800">{client.name}, {client.age}</p>
           <p className="text-xs text-gray-500">{client.pronouns}</p>
@@ -167,9 +166,7 @@ function BriefStep({ client, onBack, onNext }) {
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-3">
-        <div className={`w-12 h-12 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center text-xl font-bold flex-shrink-0`}>
-          {client.name[0]}
-        </div>
+        <ClientAvatar client={client} size="2xl" />
         <div>
           <h2 className="text-2xl font-semibold text-gray-800">Case Brief — {client.name}</h2>
           <p className="text-sm text-gray-400">Review before your interview. You may reference this during the session.</p>
