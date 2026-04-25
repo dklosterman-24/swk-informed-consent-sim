@@ -24,7 +24,7 @@ export const CLIENTS = {
     label: 'David, 22',
     color: 'amber',
     tier: 'standard',
-    voiceId: 'TX3LPaxmHKxFdv7VOKKK', // ElevenLabs: Liam — neutral, measured
+    voiceId: 'yoZ06aMxZJJ28mfd3POQ', // ElevenLabs: Sam — young, raspy, natural
     avatar: 'https://api.dicebear.com/9.x/personas/svg?seed=david-consent-sim&backgroundColor=fef3c7',
     summary: `David is a 22-year-old college student who recently lost his off-campus apartment. He is sleeping in his car and showering at the campus fitness center. A friend convinced him to contact a social worker at the local Salvation Army to inquire about housing resources and help with budgeting. David cannot afford to live on campus and has an outstanding balance on his university account. He is unsure if he qualifies for any community programs and knows very little about how to find resources. He works part-time at a fast-food restaurant and is a part-time student. He is worried he will have to drop out if he cannot resolve his outstanding university bill. He does not want to miss work because it is his only source of income. He has family in another state but rarely visits. David recently stopped attending a local faith community. This is your first meeting with David. You have been in this position for 3 months.`,
   },
