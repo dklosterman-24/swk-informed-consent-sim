@@ -1,11 +1,11 @@
 # SWK Consent Sim — Session Handoff
-*Last updated: April 24, 2026*
+*Last updated: April 25, 2026*
 
 ---
 
-## Current State: Fully Functional
+## Current State: Fully Functional + Live on Vercel
 
-The app is live, wired to real APIs, and pushed to GitHub. Ready for Vercel deployment.
+The app is live on Vercel with both API keys set. Working locally and in production.
 
 ---
 
@@ -93,7 +93,7 @@ This would meaningfully close the gap between simulated and real assessment. Req
 
 ## Next Steps (When Ready)
 
-- [ ] Swap in OUES API keys (Anthropic + ElevenLabs)
-- [ ] Deploy to Vercel — get public URL for Canvas embed or sharing
-- [ ] Share with peer for feedback round 2
+- [ ] Swap personal API keys for OUES keys (Anthropic + ElevenLabs) — edit `.env` locally and update Vercel env vars
+- [ ] Share Vercel URL with peer / faculty for feedback round 2
 - [ ] Consider upgrading model to `claude-sonnet-4-6` for richer responses (one line change in `api/chat.js`)
+- [ ] Replace placeholder character avatars with real portrait photos (drop in `public/`, update `src/lib/clients.js`)
