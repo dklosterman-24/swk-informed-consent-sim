@@ -22,7 +22,10 @@ export default async function handler(req, res) {
       system,
       messages,
     })
-    return res.status(200).json({ content: response.content[0].text })
+    return res.status(200).json({
+      content: response.content[0].text,
+      usage: { input_tokens: response.usage.input_tokens, output_tokens: response.usage.output_tokens },
+    })
   } catch (err) {
     console.error('Claude API error:', err)
     return res.status(500).json({ error: 'LLM request failed', detail: err.message })

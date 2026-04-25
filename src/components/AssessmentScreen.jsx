@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { CLIENTS, CLIENT_COLORS } from '../lib/clients.js'
-import { generateAssessment } from '../lib/api.js'
+import { generateAssessment, getSessionUsage, USE_LIVE_LLM, USE_ELEVENLABS } from '../lib/api.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
 
 const LEVEL_STYLES = {
@@ -61,10 +61,14 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
   const [assessmentText, setAssessmentText] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [usage, setUsage] = useState(null)
 
   useEffect(() => {
     generateAssessment(null, interviewMessages, client.name)
-      .then(text => setAssessmentText(text))
+      .then(text => {
+        setAssessmentText(text)
+        setUsage(getSessionUsage())
+      })
       .catch(err => setError(err.message))
       .finally(() => setIsLoading(false))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -124,6 +128,36 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
                   </div>
                 ))}
               </div>
+
+              {/* Usage stats */}
+              {USE_LIVE_LLM && usage && (
+                <div className="bg-white rounded-2xl shadow-softer border border-warm-100 px-5 py-4">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Session API Usage</p>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700">{usage.inputTokens.toLocaleString()}</p>
+                      <p className="text-xs text-gray-400">input tokens</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700">{usage.outputTokens.toLocaleString()}</p>
+                      <p className="text-xs text-gray-400">output tokens</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700">{usage.turns}</p>
+                      <p className="text-xs text-gray-400">API calls</p>
+                    </div>
+                  </div>
+                  {USE_ELEVENLABS && (
+                    <div className="mt-3 pt-3 border-t border-warm-100 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-gray-700">{usage.elChars.toLocaleString()}</p>
+                        <p className="text-xs text-gray-400">ElevenLabs characters</p>
+                      </div>
+                      <p className="text-xs text-gray-300 text-right max-w-[160px]">Check billing at console.anthropic.com and elevenlabs.io</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Main assessment */}
               <div className="bg-white rounded-3xl shadow-soft p-6">

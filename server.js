@@ -35,7 +35,10 @@ const server = http.createServer(async (req, res) => {
         messages,
       })
       res.writeHead(200, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify({ content: response.content[0].text }))
+      res.end(JSON.stringify({
+        content: response.content[0].text,
+        usage: { input_tokens: response.usage.input_tokens, output_tokens: response.usage.output_tokens },
+      }))
     } catch (err) {
       console.error('[/api/chat]', err.message)
       res.writeHead(500, { 'Content-Type': 'application/json' })

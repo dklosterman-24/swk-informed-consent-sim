@@ -3,6 +3,18 @@ import { getScriptedResponse, getScriptedFeedback, getScriptedAssessment } from 
 export const USE_LIVE_LLM    = true  // flip to false to use scripted offline mode
 export const USE_ELEVENLABS  = true  // flip to false to use browser TTS
 
+// ─── Session usage tracking ───────────────────────────────────────────────────
+let _usage = { inputTokens: 0, outputTokens: 0, elChars: 0, turns: 0 }
+export const getSessionUsage  = () => ({ ..._usage })
+export const resetSessionUsage = () => { _usage = { inputTokens: 0, outputTokens: 0, elChars: 0, turns: 0 } }
+
+function _trackClaudeUsage(usage) {
+  if (!usage) return
+  _usage.inputTokens  += usage.input_tokens  || 0
+  _usage.outputTokens += usage.output_tokens || 0
+  _usage.turns++
+}
+
 // ─── Chat ─────────────────────────────────────────────────────────────────────
 
 export async function sendChatMessage(systemPrompt, conversationHistory, clientId) {
@@ -24,7 +36,9 @@ export async function sendChatMessage(systemPrompt, conversationHistory, clientI
     throw new Error(err.detail || err.error || `Request failed: ${response.status}`)
   }
 
-  return (await response.json()).content
+  const data = await response.json()
+  _trackClaudeUsage(data.usage)
+  return data.content
 }
 
 export async function sendFeedbackMessage(systemPrompt, conversationHistory, clientId, isOpening) {
@@ -44,7 +58,9 @@ export async function sendFeedbackMessage(systemPrompt, conversationHistory, cli
     throw new Error(err.detail || err.error || `Request failed: ${response.status}`)
   }
 
-  return (await response.json()).content
+  const data = await response.json()
+  _trackClaudeUsage(data.usage)
+  return data.content
 }
 
 export async function generateAssessment(systemPrompt, interviewMessages, clientName) {
@@ -71,12 +87,15 @@ export async function generateAssessment(systemPrompt, interviewMessages, client
     throw new Error(err.detail || err.error || `Request failed: ${response.status}`)
   }
 
-  return (await response.json()).content
+  const data = await response.json()
+  _trackClaudeUsage(data.usage)
+  return data.content
 }
 
 // ─── ElevenLabs TTS ───────────────────────────────────────────────────────────
 
 export async function speakWithElevenLabs(text, voiceId) {
+  _usage.elChars += text.length
   const response = await fetch('/api/speak', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -3,6 +3,7 @@ import SetupScreen from './components/SetupScreen.jsx'
 import InterviewScreen from './components/InterviewScreen.jsx'
 import FeedbackScreen from './components/FeedbackScreen.jsx'
 import AssessmentScreen from './components/AssessmentScreen.jsx'
+import { resetSessionUsage } from './lib/api.js'
 
 // Phases map to Kolb's Experiential Learning Cycle:
 // setup → interview (CE) → feedback (RO) → assessment (AC) → restart (AE)
@@ -14,6 +15,7 @@ export default function App() {
   const [feedbackMessages, setFeedbackMessages] = useState([])
 
   const handleStart = (selectedClientId) => {
+    resetSessionUsage()
     setClientId(selectedClientId)
     setPhase('interview')
   }
