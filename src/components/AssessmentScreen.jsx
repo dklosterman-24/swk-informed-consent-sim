@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { CLIENTS, CLIENT_COLORS } from '../lib/clients.js'
 import { generateAssessment, getSessionUsage, USE_LIVE_LLM, USE_ELEVENLABS } from '../lib/api.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
+import ClientAvatar from './ClientAvatar.jsx'
 
 const LEVEL_STYLES = {
   'Excellent':     'bg-green-100 text-green-800',
@@ -77,9 +78,7 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
     <div className="min-h-screen bg-warm-50 flex flex-col">
       <header className="bg-white border-b border-warm-200 px-4 py-3 flex-shrink-0 shadow-softer">
         <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center font-bold flex-shrink-0`}>
-            {client.name[0]}
-          </div>
+          <ClientAvatar client={client} size="md" />
           <div>
             <p className="font-semibold text-gray-800">Session Assessment — {client.name}</p>
             <p className="text-xs text-gray-400">Based on your interview transcript</p>

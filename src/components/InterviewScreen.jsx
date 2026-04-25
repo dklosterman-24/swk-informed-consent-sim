@@ -6,6 +6,7 @@ import { useSpeechRecognition } from '../hooks/useSpeechRecognition.js'
 import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
 import MessageBubble from './MessageBubble.jsx'
+import ClientAvatar from './ClientAvatar.jsx'
 
 const INTERVIEW_DURATION = 20 * 60
 
@@ -93,9 +94,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
       <header className="bg-white border-b border-warm-200 px-4 py-3 flex-shrink-0 shadow-softer">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className={`w-9 h-9 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center font-bold flex-shrink-0`}>
-              {client.name[0]}
-            </div>
+            <ClientAvatar client={client} size="md" />
             <div className="min-w-0">
               <p className="font-semibold text-gray-800 truncate">{client.name}, {client.age}</p>
               <p className="text-xs text-gray-400">{client.pronouns} · First session</p>
@@ -158,9 +157,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
           <div className="flex-1 overflow-y-auto px-4 py-5 space-y-4">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className={`w-16 h-16 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center text-2xl font-bold mb-4`}>
-                  {client.name[0]}
-                </div>
+                <ClientAvatar client={client} size="lg" className="mb-4" />
                 <p className="text-gray-500 text-sm max-w-xs">
                   {client.name} is waiting. Greet your client when you're ready to begin.
                 </p>
@@ -172,9 +169,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
             ))}
             {isLoading && (
               <div className="flex items-end gap-2.5 justify-start">
-                <div className={`w-8 h-8 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center text-sm font-bold flex-shrink-0`}>
-                  {client.name[0]}
-                </div>
+                <ClientAvatar client={client} size="sm" />
                 <div className="bg-white border border-warm-100 shadow-softer rounded-2xl rounded-bl-sm px-4 py-3">
                   <div className="flex gap-1.5 items-center h-4">
                     <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />

@@ -1,4 +1,5 @@
 import { CLIENT_COLORS, CLIENTS } from '../lib/clients.js'
+import ClientAvatar from './ClientAvatar.jsx'
 
 export default function MessageBubble({ message, clientId }) {
   const isClient = message.role === 'assistant'
@@ -8,9 +9,7 @@ export default function MessageBubble({ message, clientId }) {
   return (
     <div className={`flex items-end gap-2.5 ${isClient ? 'justify-start' : 'justify-end'}`}>
       {isClient && (
-        <div className={`w-8 h-8 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center text-sm font-bold flex-shrink-0 mb-0.5`}>
-          {client?.name[0]}
-        </div>
+        <ClientAvatar client={client} size="sm" className="mb-0.5" />
       )}
       <div className={`max-w-[75%]`}>
         <p className={`text-xs font-medium mb-1 ${isClient ? `${colors.text} ml-1` : 'text-gray-400 text-right mr-1'}`}>
