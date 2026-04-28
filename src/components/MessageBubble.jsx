@@ -18,7 +18,7 @@ export default function MessageBubble({ message, clientId }) {
         <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
           isClient
             ? `bg-white border border-warm-100 shadow-softer text-gray-800 rounded-bl-sm`
-            : 'bg-sage-600 text-white rounded-br-sm shadow-soft'
+            : 'bg-crimson-600 text-white rounded-br-sm shadow-soft'
         }`}>
           {message.content}
         </div>

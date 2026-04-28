@@ -17,15 +17,15 @@ export function PhaseIndicator({ currentPhase }) {
         <div key={phase.id} className="flex items-center">
           <div className="flex items-center gap-1.5">
             <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-              i < currentIndex  ? 'bg-sage-500 text-white' :
-              i === currentIndex ? 'bg-sage-700 text-white' :
+              i < currentIndex  ? 'bg-crimson-500 text-white' :
+              i === currentIndex ? 'bg-crimson-700 text-white' :
               'bg-warm-200 text-gray-400'
             }`}>
               {i < currentIndex ? '✓' : i + 1}
             </div>
             <span className={`text-xs font-medium hidden sm:block transition-colors ${
-              i === currentIndex ? 'text-sage-700' :
-              i < currentIndex  ? 'text-sage-500' :
+              i === currentIndex ? 'text-crimson-700' :
+              i < currentIndex  ? 'text-crimson-500' :
               'text-gray-400'
             }`}>
               {phase.label}
@@ -33,7 +33,7 @@ export function PhaseIndicator({ currentPhase }) {
           </div>
           {i < phases.length - 1 && (
             <div className={`w-6 sm:w-10 h-px mx-2 transition-colors ${
-              i < currentIndex ? 'bg-sage-400' : 'bg-warm-200'
+              i < currentIndex ? 'bg-crimson-400' : 'bg-warm-200'
             }`} />
           )}
         </div>
@@ -80,10 +80,13 @@ export default function SetupScreen({ onStart }) {
 
   return (
     <div className="min-h-screen bg-warm-50 flex flex-col">
-      <header className="bg-white border-b border-warm-200 px-5 py-4 shadow-softer">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-sage-600 text-xs font-semibold uppercase tracking-widest">Generalist Practice with Individuals and Families</p>
-          <h1 className="text-xl font-semibold text-gray-800 mt-0.5">Client Engagement Practice Simulator</h1>
+      <header className="bg-crimson-600 px-5 py-4 shadow-soft">
+        <div className="max-w-3xl mx-auto flex items-center justify-between gap-4">
+          <div>
+            <p className="text-crimson-200 text-xs font-semibold uppercase tracking-widest font-condensed">Generalist Practice with Individuals and Families</p>
+            <h1 className="text-xl font-bold text-white mt-0.5 font-condensed tracking-wide">Client Engagement Practice Simulator</h1>
+          </div>
+          <img src="/OU_online_logo.png" alt="OU Online" className="h-8 flex-shrink-0 brightness-0 invert" />
         </div>
       </header>
 
@@ -150,7 +153,7 @@ function SelectStep({ selectedClient, standardClients, advancedClients, onSelect
       <button
         onClick={onNext}
         disabled={!selectedClient}
-        className="w-full py-3.5 bg-sage-600 text-white font-medium rounded-2xl hover:bg-sage-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft hover:shadow-medium"
+        className="w-full py-3.5 bg-crimson-600 text-white font-medium rounded-2xl hover:bg-crimson-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft hover:shadow-medium"
       >
         Continue to Case Brief
       </button>
@@ -195,7 +198,7 @@ function BriefStep({ client, onBack, onNext }) {
             <ul className="space-y-1.5">
               {AGENCY_SERVICES.services.map(s => (
                 <li key={s} className="text-sm text-gray-600 flex items-center gap-2">
-                  <span className={`w-1.5 h-1.5 rounded-full bg-sage-400 flex-shrink-0`} />
+                  <span className={`w-1.5 h-1.5 rounded-full bg-crimson-400 flex-shrink-0`} />
                   {s}
                 </li>
               ))}
@@ -206,7 +209,7 @@ function BriefStep({ client, onBack, onNext }) {
             <ul className="space-y-1.5">
               {AGENCY_SERVICES.populations.map(p => (
                 <li key={p} className="text-sm text-gray-600 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sage-400 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-crimson-400 flex-shrink-0" />
                   {p}
                 </li>
               ))}
@@ -219,7 +222,7 @@ function BriefStep({ client, onBack, onNext }) {
         <button onClick={onBack} className="flex-1 py-3 border border-warm-200 text-gray-600 font-medium rounded-2xl hover:bg-warm-100 transition-colors">
           Back
         </button>
-        <button onClick={onNext} className="flex-1 py-3 bg-sage-600 text-white font-medium rounded-2xl hover:bg-sage-700 transition-all shadow-soft">
+        <button onClick={onNext} className="flex-1 py-3 bg-crimson-600 text-white font-medium rounded-2xl hover:bg-crimson-700 transition-all shadow-soft">
           Continue to Interview Guide
         </button>
       </div>
@@ -238,15 +241,15 @@ function GuideStep({ client, onBack, onStart }) {
         </p>
       </div>
 
-      <div className="bg-sage-50 border border-sage-100 rounded-2xl px-5 py-4">
-        <p className="text-sm font-semibold text-sage-800 mb-1">This is a safe space to practice</p>
-        <p className="text-sm text-sage-700 leading-relaxed">There's no penalty for mistakes here — that's the point. Try different approaches, pay attention to how {client.name} responds to your tone and phrasing, and use the reflection time after the interview to notice what landed and what didn't. You can always start over.</p>
+      <div className="bg-crimson-50 border border-crimson-100 rounded-2xl px-5 py-4">
+        <p className="text-sm font-semibold text-crimson-800 mb-1">This is a safe space to practice</p>
+        <p className="text-sm text-crimson-700 leading-relaxed">There's no penalty for mistakes here — that's the point. Try different approaches, pay attention to how {client.name} responds to your tone and phrasing, and use the reflection time after the interview to notice what landed and what didn't. You can always start over.</p>
       </div>
 
       <ol className="space-y-2.5">
         {INTERVIEW_GUIDE.map(item => (
           <li key={item.id} className="flex gap-4 bg-white rounded-2xl shadow-softer border border-warm-100 p-4">
-            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-sage-600 text-white text-sm font-bold flex items-center justify-center">
+            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-crimson-600 text-white text-sm font-bold flex items-center justify-center">
               {item.id}
             </span>
             <p className="text-gray-700 text-sm leading-relaxed">{item.text}</p>
@@ -254,8 +257,8 @@ function GuideStep({ client, onBack, onStart }) {
         ))}
       </ol>
 
-      <div className="bg-sage-50 border border-sage-100 rounded-2xl px-5 py-4">
-        <p className="text-sm text-sage-800">
+      <div className="bg-crimson-50 border border-crimson-100 rounded-2xl px-5 py-4">
+        <p className="text-sm text-crimson-800">
           After the 20-minute interview, {client.name} will share honest feedback about how the interaction felt from their perspective. That conversation is part of the learning — engage with it genuinely.
         </p>
       </div>
@@ -264,7 +267,7 @@ function GuideStep({ client, onBack, onStart }) {
         <button onClick={onBack} className="flex-1 py-3 border border-warm-200 text-gray-600 font-medium rounded-2xl hover:bg-warm-100 transition-colors">
           Back
         </button>
-        <button onClick={onStart} className="flex-1 py-3 bg-sage-600 text-white font-medium rounded-2xl hover:bg-sage-700 transition-all shadow-soft">
+        <button onClick={onStart} className="flex-1 py-3 bg-crimson-600 text-white font-medium rounded-2xl hover:bg-crimson-700 transition-all shadow-soft">
           Begin Interview with {client.name}
         </button>
       </div>

@@ -21,7 +21,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
   const [timeLeft, setTimeLeft] = useState(INTERVIEW_DURATION)
   const [timerStarted, setTimerStarted] = useState(false)
   const [voiceEnabled, setVoiceEnabled] = useState(true)
-  const [panelOpen, setPanelOpen] = useState(false)
+  const [panelOpen, setPanelOpen] = useState(true)
   const [panelTab, setPanelTab] = useState('guide')
   const [error, setError] = useState(null)
   const [isVoiceInput, setIsVoiceInput] = useState(false)
@@ -117,7 +117,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
             <button
               onClick={() => { setVoiceEnabled(v => !v); if (isSpeaking) cancelSpeech() }}
               title={voiceEnabled ? 'Mute client voice' : 'Enable client voice'}
-              className={`p-2 rounded-xl text-sm transition-colors ${voiceEnabled ? 'bg-sage-50 text-sage-600 hover:bg-sage-100' : 'bg-warm-100 text-gray-400 hover:bg-warm-200'}`}
+              className={`p-2 rounded-xl text-sm transition-colors ${voiceEnabled ? 'bg-crimson-50 text-crimson-600 hover:bg-crimson-100' : 'bg-warm-100 text-gray-400 hover:bg-warm-200'}`}
             >
               {voiceEnabled ? '🔊' : '🔇'}
             </button>
@@ -130,7 +130,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
             </button>
             <button
               onClick={handleEnd}
-              className="px-3 py-1.5 bg-sage-600 hover:bg-sage-700 text-white text-sm font-medium rounded-xl transition-colors shadow-soft"
+              className="px-3 py-1.5 bg-crimson-600 hover:bg-crimson-700 text-white text-sm font-medium rounded-xl transition-colors shadow-soft"
             >
               {timesUp ? 'Time\'s Up →' : 'End Interview'}
             </button>
@@ -219,7 +219,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
                 onKeyDown={handleKeyDown}
                 placeholder={`Speak to ${client.name}...`}
                 rows={2}
-                className="flex-1 resize-none bg-warm-50 border border-warm-200 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all placeholder-gray-400"
+                className="flex-1 resize-none bg-warm-50 border border-warm-200 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-crimson-400 focus:border-transparent transition-all placeholder-gray-400"
                 disabled={isLoading}
               />
               {isSpeechSupported && (
@@ -247,7 +247,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="flex-shrink-0 w-11 h-11 rounded-2xl bg-sage-600 text-white flex items-center justify-center hover:bg-sage-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft"
+                className="flex-shrink-0 w-11 h-11 rounded-2xl bg-crimson-600 text-white flex items-center justify-center hover:bg-crimson-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <line x1="22" y1="2" x2="11" y2="13" />
@@ -262,8 +262,8 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
               </p>
             )}
             {!isListening && isVoiceInput && input.trim() && (
-              <p className="text-xs text-sage-600 mt-1.5 ml-1 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-sage-400 inline-block" />
+              <p className="text-xs text-crimson-600 mt-1.5 ml-1 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-crimson-400 inline-block" />
                 Review your response above — edit if needed, then send when you're ready.
               </p>
             )}
@@ -279,7 +279,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
                   key={tab}
                   onClick={() => setPanelTab(tab)}
                   className={`flex-1 py-2.5 text-xs font-medium capitalize transition-colors ${
-                    panelTab === tab ? 'text-sage-700 border-b-2 border-sage-600' : 'text-gray-400 hover:text-gray-600'
+                    panelTab === tab ? 'text-crimson-700 border-b-2 border-crimson-600' : 'text-gray-400 hover:text-gray-600'
                   }`}
                 >
                   {tab === 'guide' ? 'Guide' : tab === 'consent' ? 'Consent' : 'Services'}
@@ -291,7 +291,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
                 <ol className="space-y-3">
                   {INTERVIEW_GUIDE.map(item => (
                     <li key={item.id} className="flex gap-2 text-xs text-gray-600">
-                      <span className="flex-shrink-0 font-bold text-sage-600">{item.id}.</span>
+                      <span className="flex-shrink-0 font-bold text-crimson-600">{item.id}.</span>
                       <span className="leading-relaxed">{item.text}</span>
                     </li>
                   ))}
@@ -307,7 +307,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
                     <ul className="space-y-1">
                       {AGENCY_SERVICES.services.map(s => (
                         <li key={s} className="text-xs text-gray-600 flex items-center gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-sage-400 flex-shrink-0" />{s}
+                          <span className="w-1 h-1 rounded-full bg-crimson-400 flex-shrink-0" />{s}
                         </li>
                       ))}
                     </ul>
@@ -317,7 +317,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
                     <ul className="space-y-1">
                       {AGENCY_SERVICES.populations.map(p => (
                         <li key={p} className="text-xs text-gray-600 flex items-center gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-sage-400 flex-shrink-0" />{p}
+                          <span className="w-1 h-1 rounded-full bg-crimson-400 flex-shrink-0" />{p}
                         </li>
                       ))}
                     </ul>

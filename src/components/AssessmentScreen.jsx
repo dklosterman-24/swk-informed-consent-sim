@@ -6,7 +6,7 @@ import ClientAvatar from './ClientAvatar.jsx'
 
 const LEVEL_STYLES = {
   'Excellent':     'bg-green-100 text-green-800',
-  'Proficient':    'bg-sage-100 text-sage-800',
+  'Proficient':    'bg-crimson-100 text-crimson-800',
   'Developing':    'bg-amber-100 text-amber-800',
   'Not Observed':  'bg-gray-100 text-gray-500',
   'Insufficient':  'bg-red-100 text-red-700',
@@ -186,7 +186,7 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
           <div className="flex gap-3 pt-2">
             <button
               onClick={onRestart}
-              className="flex-1 py-3.5 bg-sage-600 text-white font-medium rounded-2xl hover:bg-sage-700 transition-all shadow-soft hover:shadow-medium"
+              className="flex-1 py-3.5 bg-crimson-600 text-white font-medium rounded-2xl hover:bg-crimson-700 transition-all shadow-soft hover:shadow-medium"
             >
               Try Again
             </button>

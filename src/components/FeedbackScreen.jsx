@@ -13,7 +13,7 @@ const FEEDBACK_DURATION = 5 * 60
 export default function FeedbackScreen({ clientId, interviewMessages, onFeedbackComplete }) {
   const client = CLIENTS[clientId]
   const colors = CLIENT_COLORS[client.color]
-  const systemPrompt = buildFeedbackSystemPrompt(client)
+  const systemPrompt = buildFeedbackSystemPrompt(client, interviewMessages)
 
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
@@ -108,13 +108,13 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
           <div className="flex items-center gap-2">
             <button
               onClick={() => { setVoiceEnabled(v => !v); if (isSpeaking) cancelSpeech() }}
-              className={`p-2 rounded-xl text-sm transition-colors ${voiceEnabled ? 'bg-sage-50 text-sage-600 hover:bg-sage-100' : 'bg-warm-100 text-gray-400'}`}
+              className={`p-2 rounded-xl text-sm transition-colors ${voiceEnabled ? 'bg-crimson-50 text-crimson-600 hover:bg-crimson-100' : 'bg-warm-100 text-gray-400'}`}
             >
               {voiceEnabled ? '🔊' : '🔇'}
             </button>
             <button
               onClick={handleComplete}
-              className="px-3 py-1.5 bg-sage-600 hover:bg-sage-700 text-white text-sm font-medium rounded-xl transition-colors shadow-soft"
+              className="px-3 py-1.5 bg-crimson-600 hover:bg-crimson-700 text-white text-sm font-medium rounded-xl transition-colors shadow-soft"
             >
               {timesUp ? 'View Assessment →' : 'Get Assessment'}
             </button>
@@ -128,8 +128,8 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
         </div>
       </div>
 
-      <div className="bg-sage-50 border-b border-sage-100 px-4 py-3 flex-shrink-0">
-        <p className="max-w-3xl mx-auto text-sm text-sage-800">
+      <div className="bg-crimson-50 border-b border-crimson-100 px-4 py-3 flex-shrink-0">
+        <p className="max-w-3xl mx-auto text-sm text-crimson-800">
           The interview is over. {client.name} is sharing how the experience felt from their side. Ask follow-up questions — what helped, what felt rushed, what made them feel heard.
         </p>
       </div>
@@ -186,7 +186,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
               onKeyDown={handleKeyDown}
               placeholder="Ask for feedback or respond to what they shared..."
               rows={2}
-              className="flex-1 resize-none bg-warm-50 border border-warm-200 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all placeholder-gray-400"
+              className="flex-1 resize-none bg-warm-50 border border-warm-200 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-crimson-400 focus:border-transparent transition-all placeholder-gray-400"
               disabled={isLoading}
             />
             {isSpeechSupported && (
@@ -206,7 +206,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 w-11 h-11 rounded-2xl bg-sage-600 text-white flex items-center justify-center hover:bg-sage-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft"
+              className="flex-shrink-0 w-11 h-11 rounded-2xl bg-crimson-600 text-white flex items-center justify-center hover:bg-crimson-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="22" y1="2" x2="11" y2="13" />

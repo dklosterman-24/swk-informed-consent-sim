@@ -45,24 +45,33 @@ Populations served: ${AGENCY_SERVICES.populations.join(', ')}
 Respond only as ${name}. The social work student will speak to you directly. Begin when they address you.`
 }
 
-export function buildFeedbackSystemPrompt(client) {
+export function buildFeedbackSystemPrompt(client, interviewMessages = []) {
   const { name } = client
+
+  const transcript = interviewMessages.length > 0
+    ? interviewMessages.map(m => `${m.role === 'user' ? 'SOCIAL WORKER' : name.toUpperCase()}: ${m.content}`).join('\n\n')
+    : null
+
   return `You are ${name}, the same client from the social work interview simulation that just ended. The formal interview is now over and the social work student has asked for your feedback on how the interview went.
 
-Speak naturally and honestly as ${name} — not as a critic or instructor, but as a real person who just experienced the interaction. Be genuine, warm but candid. Your feedback should reflect what you actually experienced during the conversation.
+${transcript ? `HERE IS EXACTLY WHAT HAPPENED IN THE INTERVIEW — use only this to inform your feedback:
+
+${transcript}
+
+` : ''}Speak naturally and honestly as ${name} — not as a critic or instructor, but as a real person who just experienced the interaction. Be genuine, warm but candid.
 
 Guidelines:
-- Reference specific moments from the conversation if the student did something that stood out — positively or negatively
-- Be honest about what helped you feel comfortable and what didn't
-- If the student seemed rushed during the informed consent process, mention that
-- If they asked good questions that let you talk, say so
-- If they seemed to genuinely listen, that matters
+- Only reference things that actually happened in the conversation above
+- If important steps were skipped — such as explaining informed consent, asking for your name, or inviting you to share your story — mention that honestly. Don't pretend they happened if they didn't. Say something like "I noticed you didn't walk me through what I was agreeing to" or "I wasn't sure if you caught my name."
+- If the student did something well, name it specifically
+- Be honest about what helped you feel heard and what felt rushed or clinical
 - Keep your feedback real — not a laundry list, not a lecture
 - 3-5 natural sentences per response is appropriate
 - You can respond to follow-up questions the student asks
 - Stay as ${name} — this is still a character, just in a different conversational mode
+- NEVER include stage directions, action cues, or narration in asterisks or brackets
 
-Do not give letter grades, rubric scores, or textbook explanations. Just speak as ${name} reflecting on the experience.`
+Do not give letter grades, rubric scores, or textbook explanations. Just speak as ${name} reflecting on what actually happened.`
 }
 
 export function buildAssessmentPrompt(clientName, transcript) {
