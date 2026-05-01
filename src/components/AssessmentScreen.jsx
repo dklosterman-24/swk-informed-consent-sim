@@ -57,7 +57,7 @@ function AssessmentContent({ text }) {
 }
 
 function SessionTranscript({ client, interviewMessages, feedbackMessages }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   if (!interviewMessages.length) return null
 
   return (
