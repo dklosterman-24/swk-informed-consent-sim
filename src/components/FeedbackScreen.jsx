@@ -108,6 +108,8 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
           <div className="flex items-center gap-2">
             <button
               onClick={() => { setVoiceEnabled(v => !v); if (isSpeaking) cancelSpeech() }}
+              aria-label={voiceEnabled ? 'Mute client voice' : 'Enable client voice'}
+              aria-pressed={!voiceEnabled}
               className={`p-2 rounded-xl text-sm transition-colors ${voiceEnabled ? 'bg-crimson-50 text-crimson-600 hover:bg-crimson-100' : 'bg-warm-100 text-gray-400'}`}
             >
               {voiceEnabled ? '🔊' : '🔇'}
@@ -148,7 +150,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
       <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full">
         <div className="flex-1 overflow-y-auto px-4 py-5 space-y-4">
           {isLoading && messages.length === 0 && (
-            <div className="flex items-end gap-2.5">
+            <div role="status" aria-label={`${client.name} is responding`} className="flex items-end gap-2.5">
               <ClientAvatar client={client} size="sm" />
               <div className="bg-white border border-warm-100 shadow-softer rounded-2xl rounded-bl-sm px-4 py-3">
                 <div className="flex gap-1.5 items-center h-4">
@@ -163,7 +165,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
             <MessageBubble key={i} message={msg} clientId={clientId} />
           ))}
           {isLoading && messages.length > 0 && (
-            <div className="flex items-end gap-2.5">
+            <div role="status" aria-label={`${client.name} is responding`} className="flex items-end gap-2.5">
               <ClientAvatar client={client} size="sm" />
               <div className="bg-white border border-warm-100 shadow-softer rounded-2xl rounded-bl-sm px-4 py-3">
                 <div className="flex gap-1.5 items-center h-4">
@@ -174,7 +176,7 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
               </div>
             </div>
           )}
-          {error && <div className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">{error}</div>}
+          {error && <div role="alert" className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">{error}</div>}
           <div ref={messagesEndRef} />
         </div>
 
@@ -196,6 +198,8 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
                 onMouseUp={stopListening}
                 onTouchStart={startListening}
                 onTouchEnd={stopListening}
+                aria-label={isListening ? 'Release to stop recording' : 'Hold to record voice input'}
+                aria-pressed={isListening}
                 className={`flex-shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center transition-all ${
                   isListening ? 'bg-red-500 text-white scale-110 ring-4 ring-red-100' : 'bg-warm-100 text-gray-500 hover:bg-warm-200'
                 }`}
@@ -206,9 +210,10 @@ export default function FeedbackScreen({ clientId, interviewMessages, onFeedback
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
+              aria-label="Send message"
               className="flex-shrink-0 w-11 h-11 rounded-2xl bg-crimson-600 text-white flex items-center justify-center hover:bg-crimson-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                 <line x1="22" y1="2" x2="11" y2="13" />
                 <polygon points="22 2 15 22 11 13 2 9 22 2" />
               </svg>

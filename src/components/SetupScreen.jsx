@@ -12,15 +12,18 @@ export function PhaseIndicator({ currentPhase }) {
   const currentIndex = phases.findIndex(p => p.id === currentPhase)
 
   return (
-    <div className="flex items-center gap-0">
+    <nav aria-label="Session progress" className="flex items-center gap-0">
       {phases.map((phase, i) => (
         <div key={phase.id} className="flex items-center">
-          <div className="flex items-center gap-1.5">
+          <div
+            className="flex items-center gap-1.5"
+            aria-current={i === currentIndex ? 'step' : undefined}
+          >
             <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
               i < currentIndex  ? 'bg-crimson-500 text-white' :
               i === currentIndex ? 'bg-crimson-700 text-white' :
               'bg-warm-200 text-gray-400'
-            }`}>
+            }`} aria-hidden="true">
               {i < currentIndex ? '✓' : i + 1}
             </div>
             <span className={`text-xs font-medium hidden sm:block transition-colors ${
@@ -34,11 +37,11 @@ export function PhaseIndicator({ currentPhase }) {
           {i < phases.length - 1 && (
             <div className={`w-6 sm:w-10 h-px mx-2 transition-colors ${
               i < currentIndex ? 'bg-crimson-400' : 'bg-warm-200'
-            }`} />
+            }`} aria-hidden="true" />
           )}
         </div>
       ))}
-    </div>
+    </nav>
   )
 }
 
@@ -47,6 +50,8 @@ function ClientCard({ client, selected, onSelect }) {
   return (
     <button
       onClick={() => onSelect(client.id)}
+      aria-pressed={selected}
+      aria-label={`Select ${client.name}${selected ? ' (selected)' : ''}`}
       className={`w-full text-left rounded-2xl border-2 p-4 transition-all ${
         selected
           ? `${colors.border} shadow-medium ring-2 ${colors.ring} ring-offset-2 bg-white`
@@ -280,10 +285,11 @@ function Accordion({ title, open, onToggle, children }) {
     <div className="bg-white rounded-2xl shadow-softer border border-warm-100 overflow-hidden">
       <button
         onClick={onToggle}
+        aria-expanded={open}
         className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-warm-50 transition-colors"
       >
         <span className="font-medium text-gray-700">{title}</span>
-        <span className={`text-gray-400 text-xl transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
+        <span className={`text-gray-400 text-xl transition-transform ${open ? 'rotate-45' : ''}`} aria-hidden="true">+</span>
       </button>
       {open && (
         <div className="px-5 pb-5 border-t border-warm-100 pt-4">

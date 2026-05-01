@@ -116,6 +116,8 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => { setVoiceEnabled(v => !v); if (isSpeaking) cancelSpeech() }}
+              aria-label={voiceEnabled ? 'Mute client voice' : 'Enable client voice'}
+              aria-pressed={!voiceEnabled}
               title={voiceEnabled ? 'Mute client voice' : 'Enable client voice'}
               className={`p-2 rounded-xl text-sm transition-colors ${voiceEnabled ? 'bg-crimson-50 text-crimson-600 hover:bg-crimson-100' : 'bg-warm-100 text-gray-400 hover:bg-warm-200'}`}
             >
@@ -123,6 +125,8 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
             </button>
             <button
               onClick={() => setPanelOpen(o => !o)}
+              aria-label={panelOpen ? 'Close reference panel' : 'Open reference panel'}
+              aria-expanded={panelOpen}
               className="hidden lg:flex p-2 rounded-xl bg-warm-100 text-gray-500 hover:bg-warm-200 transition-colors text-sm"
               title="Reference panel"
             >
@@ -191,7 +195,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
               <MessageBubble key={i} message={msg} clientId={clientId} />
             ))}
             {isLoading && (
-              <div className="flex items-end gap-2.5 justify-start">
+              <div role="status" aria-label={`${client.name} is responding`} className="flex items-end gap-2.5 justify-start">
                 <ClientAvatar client={client} size="sm" />
                 <div className="bg-white border border-warm-100 shadow-softer rounded-2xl rounded-bl-sm px-4 py-3">
                   <div className="flex gap-1.5 items-center h-4">
@@ -203,7 +207,7 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
               </div>
             )}
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
+              <div role="alert" className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -230,6 +234,8 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
                     onMouseUp={stopListening}
                     onTouchStart={startListening}
                     onTouchEnd={stopListening}
+                    aria-label={isListening ? 'Release to stop recording' : 'Hold to record voice input'}
+                    aria-pressed={isListening}
                     title="Hold to speak"
                     className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all text-base ${
                       isListening
@@ -247,9 +253,10 @@ export default function InterviewScreen({ clientId, onInterviewComplete }) {
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
+                aria-label="Send message"
                 className="flex-shrink-0 w-11 h-11 rounded-2xl bg-crimson-600 text-white flex items-center justify-center hover:bg-crimson-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-soft"
               >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                   <line x1="22" y1="2" x2="11" y2="13" />
                   <polygon points="22 2 15 22 11 13 2 9 22 2" />
                 </svg>

@@ -30,4 +30,7 @@
 @media print {
   header, .no-print { display: none; }
   body { background: white; }
+  .bg-warm-50 { background: white !important; }
+  /* Force background colors on rubric level badges */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

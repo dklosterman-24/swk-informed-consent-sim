@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { CLIENTS, CLIENT_COLORS } from '../lib/clients.js'
 import { generateAssessment, getSessionUsage, USE_LIVE_LLM, USE_ELEVENLABS } from '../lib/api.js'
+import { downloadSessionPDF } from '../lib/generatePDF.js'
 import { PhaseIndicator } from './SetupScreen.jsx'
 import ClientAvatar from './ClientAvatar.jsx'
 
@@ -55,6 +56,58 @@ function AssessmentContent({ text }) {
   return <div>{elements}</div>
 }
 
+function SessionTranscript({ client, interviewMessages, feedbackMessages }) {
+  const [open, setOpen] = useState(false)
+  if (!interviewMessages.length) return null
+
+  return (
+    <div className="bg-white rounded-3xl shadow-soft">
+      <button
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        className="no-print w-full flex items-center justify-between px-6 py-4 text-left hover:bg-warm-50 transition-colors rounded-3xl"
+      >
+        <span className="font-semibold text-gray-800">Full Session Transcript</span>
+        <span className={`text-gray-400 text-xl transition-transform ${open ? 'rotate-45' : ''}`} aria-hidden="true">+</span>
+      </button>
+      <div className={`${open ? 'block' : 'hidden print:block'} border-t border-warm-100`}>
+        <div className="px-6 pt-4 pb-6 space-y-5">
+          {interviewMessages.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Interview</h3>
+              <div className="space-y-3">
+                {interviewMessages.map((msg, i) => (
+                  <div key={i} className="text-sm leading-relaxed">
+                    <span className="font-semibold text-gray-700">
+                      {msg.role === 'user' ? 'Student' : client.name}:
+                    </span>{' '}
+                    <span className="text-gray-600">{msg.content}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {feedbackMessages.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Client Reflection</h3>
+              <div className="space-y-3">
+                {feedbackMessages.map((msg, i) => (
+                  <div key={i} className="text-sm leading-relaxed">
+                    <span className="font-semibold text-gray-700">
+                      {msg.role === 'user' ? 'Student' : client.name}:
+                    </span>{' '}
+                    <span className="text-gray-600">{msg.content}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AssessmentScreen({ clientId, interviewMessages, feedbackMessages, onRestart }) {
   const client = CLIENTS[clientId]
   const colors = CLIENT_COLORS[client.color]
@@ -63,6 +116,8 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [usage, setUsage] = useState(null)
+  const [confirmRestart, setConfirmRestart] = useState(false)
+  const [pdfLoading, setPdfLoading] = useState(false)
 
   useEffect(() => {
     generateAssessment(null, interviewMessages, client.name)
@@ -95,18 +150,24 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
       <main className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-3xl mx-auto space-y-4">
 
+          {/* Print-only identification header */}
+          <div className="hidden print:block pb-4 border-b border-warm-200">
+            <h1 className="text-xl font-bold text-gray-800">SWK Client Engagement Practice Simulator</h1>
+            <p className="text-sm text-gray-600 mt-1">Session Assessment — {client.name} | {new Date().toLocaleDateString()}</p>
+          </div>
+
           {isLoading && (
-            <div className="bg-white rounded-3xl shadow-soft p-10 text-center">
+            <div role="status" aria-label="Generating assessment" className="bg-white rounded-3xl shadow-soft p-10 text-center">
               <div className={`w-14 h-14 rounded-full ${colors.bg} flex items-center justify-center mx-auto mb-4`}>
-                <div className={`w-6 h-6 border-2 border-current ${colors.text} border-t-transparent rounded-full animate-spin`} />
+                <div className={`w-6 h-6 border-2 border-current ${colors.text} border-t-transparent rounded-full animate-spin`} aria-hidden="true" />
               </div>
               <p className="text-gray-700 font-medium">Reviewing your session...</p>
-              <p className="text-gray-400 text-sm mt-1">Analyzing transcript against rubric criteria</p>
+              <p className="text-gray-500 text-sm mt-1">Analyzing transcript against rubric criteria</p>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-2xl px-5 py-4 text-red-700">
+            <div role="alert" className="bg-red-50 border border-red-200 rounded-2xl px-5 py-4 text-red-700">
               <p className="font-medium text-sm">Assessment could not be generated.</p>
               <p className="text-sm mt-1 text-red-600">{error}</p>
             </div>
@@ -163,6 +224,13 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
                 <AssessmentContent text={assessmentText} />
               </div>
 
+              {/* Full session transcript — collapsed on screen, always prints */}
+              <SessionTranscript
+                client={client}
+                interviewMessages={interviewMessages}
+                feedbackMessages={feedbackMessages}
+              />
+
               {/* Reflection prompts */}
               <div className={`${colors.bg} rounded-2xl p-5 border ${colors.border}`}>
                 <p className={`text-sm font-semibold ${colors.text} mb-3`}>Before your next attempt, reflect:</p>
@@ -183,19 +251,59 @@ export default function AssessmentScreen({ clientId, interviewMessages, feedback
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
-            <button
-              onClick={onRestart}
-              className="flex-1 py-3.5 bg-crimson-600 text-white font-medium rounded-2xl hover:bg-crimson-700 transition-all shadow-soft hover:shadow-medium"
-            >
-              Try Again
-            </button>
-            <button
-              onClick={() => window.print()}
-              className="px-5 py-3.5 border border-warm-200 text-gray-600 font-medium rounded-2xl hover:bg-warm-100 transition-colors"
-            >
-              Print / Save
-            </button>
+          <div className="no-print pt-2">
+            {confirmRestart ? (
+              <div className="space-y-2">
+                <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 text-center">
+                  Starting over clears your session. Print or save your results first.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setConfirmRestart(false)}
+                    className="flex-1 py-2.5 border border-warm-200 text-gray-600 font-medium rounded-2xl hover:bg-warm-100 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={onRestart}
+                    className="flex-1 py-2.5 bg-crimson-600 text-white font-medium rounded-2xl hover:bg-crimson-700 transition-all shadow-soft"
+                  >
+                    Start Over
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setConfirmRestart(true)}
+                  className="flex-1 py-3.5 bg-crimson-600 text-white font-medium rounded-2xl hover:bg-crimson-700 transition-all shadow-soft hover:shadow-medium"
+                >
+                  Try Again
+                </button>
+                <button
+                  onClick={() => {
+                    setPdfLoading(true)
+                    setTimeout(() => {
+                      try {
+                        downloadSessionPDF({ client, assessmentText, interviewMessages, feedbackMessages })
+                      } finally {
+                        setPdfLoading(false)
+                      }
+                    }, 0)
+                  }}
+                  disabled={pdfLoading || isLoading}
+                  aria-label="Download session assessment as PDF"
+                  className="flex items-center gap-2 px-5 py-3.5 bg-white border border-warm-200 text-gray-600 font-medium rounded-2xl hover:bg-warm-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  {pdfLoading ? 'Generating...' : 'Download PDF'}
+                </button>
+              </div>
+            )}
           </div>
 
         </div>
