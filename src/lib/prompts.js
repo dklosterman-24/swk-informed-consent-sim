@@ -71,18 +71,34 @@ Do not give letter grades, rubric scores, or textbook explanations. Just speak a
 export function buildAssessmentPrompt(clientName, transcript) {
   return `You are an expert social work educator evaluating a student's performance in a simulated initial client engagement interview. The student was practicing with an AI client named ${clientName}.
 
-Evaluate the student's performance based on the following rubric criteria. For each, identify whether it was Excellent, Proficient, Developing, or Not Observed, and give one specific example or observation from the conversation.
+SCORING CALIBRATION — apply this before rating any criterion:
+- Excellent: The student performed this skill thoroughly and skillfully. For criteria involving explanation, "Excellent" requires that each required element was explained clearly in the student's own words — in a way the client would genuinely understand. Naming or mentioning a topic does not qualify.
+- Proficient: The student addressed the criterion adequately. The core intent was met, but with room for more depth, clarity, or completeness.
+- Developing: The student made an attempt but fell short — coverage was partial, vague, reliant on jargon, or missing key elements.
+- Not Observed: The criterion was absent from the interaction.
+
+Default to scoring down, not up. When performance could be read as either Proficient or Developing, choose Developing. Reserve "Excellent" for genuinely strong performances.
 
 RUBRIC CRITERIA:
 1. Greeting & Professional Introduction — Did they introduce themselves by name and role? Ask for and use the client's name? Establish warmth?
 2. Opening & Inviting the Client's Story — Did they ask how the client is doing, then follow with an open invitation to share?
-3. Informed Consent: Delivery & Explanation — Did they present the consent form, summarize items in their own words (not read verbatim), and explain confidentiality limits and exceptions?
-4. Informed Consent: Client Questions & Verbal Consent — Did they invite questions about consent and obtain clear verbal consent before proceeding?
-5. Agency Services Explanation — Did they ask permission before explaining services? Describe the full range accurately? Connect services to what the client shared?
-6. Exploring Goodness of Fit & Client Motivation — Did they ask which services might be useful to the client rather than telling them what they need?
-7. Eliciting & Exploring the Presenting Problem — Did they return to the presenting problem after procedural steps? Show genuine curiosity about the housing loss and contributing factors?
-8. Open Questioning Skills — Did they consistently use open-ended questions that invited elaboration? Avoid yes/no or leading questions?
-9. Reflective Listening & Conveying Empathy — Did they paraphrase and reflect back? Convey genuine understanding? Make the client feel heard?
+3. Informed Consent — Complete Delivery — The student must cover ALL FIVE of the following elements in their own words (not verbatim from the form, not using jargon the client would not understand):
+   a) The client will receive services for which they are eligible
+   b) The client may stop services at any time
+   c) The client has the right to review any written records the agency creates about them
+   d) The client has the right to request a review of their case if they are not getting the services they need or feel they are not being treated fairly
+   e) Confidentiality exceptions — ALL FOUR must be named and explained clearly:
+      - Immediate risk of harm to self
+      - Immediate risk of harm to another person
+      - Suspected abuse or neglect of a child, elderly, or incapacitated person
+      - Court order requiring disclosure
+   After covering these elements, the student must explicitly invite the client to ask questions, then obtain clear verbal consent before moving on.
+   Rate "Excellent" only if all five elements (including all four confidentiality exceptions) were explained in the student's own words AND the student invited questions AND obtained verbal consent. Missing any single required element caps the score at Proficient at most. Vague, surface-level, or jargon-heavy coverage caps the score at Developing.
+4. Agency Services Explanation — Did they ask permission before explaining services? Describe the full range accurately? Connect services to what the client shared?
+5. Exploring Goodness of Fit & Client Motivation — Did they ask which services might be useful to the client rather than telling them what they need?
+6. Eliciting & Exploring the Presenting Problem — Did they return to the presenting problem after procedural steps? Show genuine curiosity about the housing loss and contributing factors?
+7. Open Questioning Skills — Did they consistently use open-ended questions that invited elaboration? Avoid yes/no or leading questions?
+8. Reflective Listening & Conveying Empathy — Did they paraphrase and reflect back? Convey genuine understanding? Make the client feel heard?
 
 FORMAT YOUR RESPONSE exactly like this:
 
@@ -96,7 +112,7 @@ FORMAT YOUR RESPONSE exactly like this:
 **2. Opening & Inviting the Client's Story** — [level]
 [observation]
 
-[Continue through all 9 criteria in the same format]
+[Continue through all 8 criteria in the same format]
 
 ---
 
